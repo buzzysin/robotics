@@ -1,0 +1,14 @@
+{
+    "sketch": "lab-01\\lab-01.ino",
+    "port": "COM7",
+    "board": "pololu-a-star:avr:a-star32U4",
+    "output": "C:\\Users\\buzzysin\\AppData\\Local\\Temp\\arduino_build_temp",
+    "programmer": "avrispmkii",
+    "buildPreferences": [
+        [
+            "compiler.cpp.extra_flags",
+            "-D__AVR_ATmega32U4__=1 -IC:\\Users\\buzzysin\\code-windows\\y4\\robotics"
+        ]
+    ],
+    "verbose": true
+}

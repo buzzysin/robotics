@@ -1,0 +1,7 @@
+{
+  "C_Cpp.default.includePath": [
+    "${default}",
+    "${workspaceFolder}/**",
+  ],
+  "C_Cpp.errorSquiggles": "enabled"
+}
