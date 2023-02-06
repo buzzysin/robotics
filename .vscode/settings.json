@@ -1,7 +1,14 @@
 {
   "C_Cpp.default.includePath": [
     "${default}",
-    "${workspaceFolder}/**",
+    "${workspaceFolder}/first-project",
   ],
   "C_Cpp.errorSquiggles": "enabled",
+  "C_Cpp.inlayHints.parameterNames.enabled": true,
+  "arduino.additionalUrls": [
+    "https://files.pololu.com/arduino/package_pololu_index.json"
+  ],
+  "arduino.clearOutputOnBuild": true,
+  "arduino.logLevel": "verbose",
+  "arduino.defaultBaudRate": 9600,
 }
