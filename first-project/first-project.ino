@@ -1,11 +1,14 @@
-#include "src/programs/main-program.h"
+#include "src/robot/robot.h"
 
-MainProgram mainProgram;
+Robot robot;
 
 void setup()
 {
+  Serial.begin(9600);
+  robot.setup();
 }
 
 void loop()
 {
+  robot.loop();
 }

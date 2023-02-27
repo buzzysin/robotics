@@ -19,26 +19,22 @@ void LineSensors::setup()
   emitter.setup();
 }
 
-void LineSensors::disable()
-{
-  emitter.on();
-}
-
-void LineSensors::enable()
+void LineSensors::disableCharging()
 {
   emitter.off();
+  // Serial.println("Turned off emitter");
+}
+
+void LineSensors::enableCharging()
+{
+  emitter.on();
+  // Serial.println("Turned on emitter");
 }
 
 unsigned long *LineSensors::read(unsigned long t_cancel)
 {
   // Enable the line sensors
-  enable();
-
-  // The line sensor state
-  uint8_t ls_state = 0b00000;
-
-  // The line sensor readings
-  unsigned long ls_readings[COUNT] = {0, 0, 0, 0, 0};
+  enableCharging();
 
   // The start time
   unsigned long t_start = micros();
@@ -46,9 +42,15 @@ unsigned long *LineSensors::read(unsigned long t_cancel)
   // Wait for the line sensors to charge
   for (uint8_t i = 0; i < COUNT; i++)
   {
-
     sensors[i].charge();
+    // Serial.println("Charged line sensor " + String(i));
   }
+
+  // Disable the line sensors
+  disableCharging();
+
+  // The line sensor state
+  uint8_t ls_state = 0b00000;
 
   // Wait for the line sensors to discharge
   while (ls_state != 0b11111)
@@ -56,14 +58,23 @@ unsigned long *LineSensors::read(unsigned long t_cancel)
     // For each line sensor
     for (uint8_t i = 0; i < COUNT; i++)
     {
-      // Read the line sensors
-      auto ls_reading = sensors[i].read();
+      auto sensor = sensors[i];
 
-      if (ls_reading.notEmpty())
+      if (ls_state & 1 << i)
+      {
+        // Serial.println("Skipping line sensor " + String(i));
+        // Skip the line sensor if it has already been read
+        continue;
+      }
+
+      // Read the line sensor
+      auto ls_reading = sensor.read();
+
+      if (ls_reading != 0)
       {
         // Store the result
-        ls_readings[i] = ls_reading.get();
-        
+        readings[i] = ls_reading;
+
         // Mark the line sensor as complete
         ls_state |= 1 << i;
       }
@@ -73,12 +84,20 @@ unsigned long *LineSensors::read(unsigned long t_cancel)
     if (micros() - t_start > t_cancel)
     {
       // Exit the loop
-      break;
+      // Serial.println("Read timed out, giving up");
+      
+      for (uint8_t i = 0; i < COUNT; i++)
+      {
+        if (ls_state & 1 << i)
+        {
+          continue;
+        }
+
+        // Set the reading to the maximum value
+        readings[i] = t_cancel;
+      }
     }
   }
 
-  // Disable the line sensors
-  disable();
-
-  return ls_readings;
+  return readings;
 }

@@ -1,6 +1,7 @@
 {
     "board": "arduino:avr:leonardo",
     "output": "C:\\Users\\buzzysin\\AppData\\Local\\Temp\\arduino_build_temp",
-    "port": "COM7",
-    "sketch": "first-project\\first-project.ino"
+    "port": "COM3",
+    "sketch": "first-project\\first-project.ino",
+    "programmer": "avrispmkii"
 }

@@ -6,7 +6,7 @@
 template <typename T>
 class Optional
 {
-  const T item;
+  T item;
   bool _empty;
 
 public:

@@ -44,7 +44,7 @@ private:
 public:
   LineSensor ll;
   LineSensor lc;
-  LineSensor  cc;
+  LineSensor cc;
   LineSensor rc;
   LineSensor rr;
 
@@ -52,6 +52,8 @@ public:
   LineSensor sensors[COUNT] = {ll, lc, cc, rc, rr};
 
   IrLed emitter;
+
+  unsigned long readings[COUNT] = {0, 0, 0, 0, 0};
 
   // Public methods
 public:
@@ -62,14 +64,14 @@ public:
   void setup() override;
 
   // Allow the line sensors to discharge
-  void disable();
+  void disableCharging();
 
   // Allowing the line sensor capacitors to charge
-  void enable();
+  void enableCharging();
 
   // Read the line sensors. Intended to be used in a `loop()`.
   // Always returns a pointer to an array of 5 `unsigned long`s
-  unsigned long *read(unsigned long t_cancel = 0);
+  unsigned long *read(unsigned long t_cancel = 6000);
 
   unsigned long *readInterrupt();
 };

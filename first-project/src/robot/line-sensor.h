@@ -14,7 +14,7 @@ protected:
   byte pin;
   unsigned long t_cancel;
   unsigned long t_start;
-  unsigned long t_read;
+  unsigned long t_read = 0;
 
   // Methods
 public:
@@ -25,7 +25,7 @@ public:
   void setup() override;
 
   // Read the line sensor
-  Optional<unsigned long> read();
+  unsigned long read();
 
   // Charge the line sensor
   void charge();

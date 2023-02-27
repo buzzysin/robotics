@@ -12,8 +12,13 @@ void LineSensor::setup()
 
 void LineSensor::charge()
 {
+  // Serial.println("Charging capacitor");
+
   // Set the pin to output
   pinMode(pin, OUTPUT);
+
+  // Temporarily set the pin to high
+  digitalWrite(pin, HIGH);
 
   // Wait for the capacitor to charge
   delayMicroseconds(10);
@@ -27,6 +32,8 @@ void LineSensor::charge()
 
 void LineSensor::reset()
 {
+  // Serial.println("Resetting line sensor");
+
   // Reset the start time
   t_start = micros();
 
@@ -34,27 +41,34 @@ void LineSensor::reset()
   t_read = 0;
 }
 
-Optional<unsigned long> LineSensor::read()
+unsigned long LineSensor::read()
 {
+  // Capture the current time
   unsigned long t_new = micros() - t_start;
+
+  // If we have a previous reading, return it
+  if (t_read > 0)
+  {
+    // Serial.println("Using previous reading");
+    return t_read;
+  }
 
   // The capacitor has discharged
   if (digitalRead(pin) == LOW)
   {
-    // If the read has been completed
-    if (t_read)
-    {
-      // The read has been completed, return the result
-      return of(t_read);
-    }
-    else
-    {
-      // Wait for the read to complete
-      return of<unsigned long>();
-    }
+    // Serial.println("Capacitor has discharged");
+
+    // Capture the time
+    t_read = t_new;
+
+    // Return the time
+    return t_read;
   }
-
-  t_read = t_new;
-
-  return of<unsigned long>();
+  // The capacitor has not yet discharged
+  else
+  {
+    // Serial.println("Capacitor has not yet discharged");
+    // We are still charging, return 0 until we discharge
+    return 0;
+  }
 }
